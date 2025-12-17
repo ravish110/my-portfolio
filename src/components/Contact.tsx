@@ -50,17 +50,17 @@ const Contact = () => {
                             <Form action="https://formsubmit.co/ravish.neosoft@gmail.com" method="POST">
                                 <Row>
                                     <Col md={6} className="mb-3">
-                                        <Form.Control type="text" name="name" placeholder="Your Name" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
+                                        <Form.Control type="text" name="name" placeholder="Your Name" aria-label="Name" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
                                     </Col>
                                     <Col md={6} className="mb-3">
-                                        <Form.Control type="email" name="email" placeholder="Your Email" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
+                                        <Form.Control type="email" name="email" placeholder="Your Email" aria-label="Email" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
                                     </Col>
                                 </Row>
                                 <Form.Group className="mb-3">
-                                    <Form.Control type="text" name="subject" placeholder="Subject" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
+                                    <Form.Control type="text" name="subject" placeholder="Subject" aria-label="Subject" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
                                 </Form.Group>
                                 <Form.Group className="mb-4">
-                                    <Form.Control as="textarea" name="message" rows={4} placeholder="Message" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
+                                    <Form.Control as="textarea" name="message" rows={4} placeholder="Message" aria-label="Message" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
                                 </Form.Group>
                                 <input type="hidden" name="_captcha" value="false" />
                                 <input type="hidden" name="_template" value="table" />

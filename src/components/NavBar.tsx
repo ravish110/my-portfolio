@@ -9,7 +9,7 @@ const NavBar = () => {
                     <FaCode size={24} className="me-2 text-info" />
                     <span className="fw-bold fs-5">Ravish Abbas</span>
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" className="border-0 shadow-none" />
+                <Navbar.Toggle aria-controls="basic-navbar-nav" aria-label="Toggle navigation" className="border-0 shadow-none" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto animate__animated animate__fadeInRight">
                         <Nav.Link href="#home" className="mx-2">Home</Nav.Link>
