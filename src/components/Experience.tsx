@@ -74,8 +74,8 @@ const Experience = () => {
                                     <h3 className="h4 fw-bold text-info mb-0">{exp.company}</h3>
                                     <span className="badge bg-light text-dark rounded-pill px-3 py-2 mt-2 mt-md-0">{exp.period}</span>
                                 </div>
-                                <h4 className="h6 text-white-50 mb-3">{exp.role}</h4>
-                                <p className="mb-0 text-light opacity-75">{exp.desc}</p>
+                                {/* <h4 className="h6 text-secondary mb-3">{exp.role}</h4> */}
+                                <p className="mb-0 opacity-75">{exp.desc}</p>
                             </div>
                         ))}
                     </Col>

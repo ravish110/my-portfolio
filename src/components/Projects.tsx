@@ -53,14 +53,14 @@ const Projects = () => {
                                 style={{ animationDelay: `${index * 0.1}s` }}
                             >
                                 <div className="mb-3">
-                                    <h3 className="h5 fw-bold text-white">{project.title}</h3>
+                                    <h3 className="h5 fw-bold">{project.title}</h3>
                                     <div className="mb-2">
                                         {project.tags.map(tag => (
                                             <Badge bg="info" className="me-1 mb-1 text-dark" key={tag}>{tag}</Badge>
                                         ))}
                                     </div>
                                 </div>
-                                <p className="text-light opacity-75 flex-grow-1">{project.desc}</p>
+                                <p className="opacity-75 flex-grow-1">{project.desc}</p>
                                 <div className="mt-3">
                                     <Button variant="outline-info" size="sm" className="w-100 d-flex align-items-center justify-content-center gap-2">
                                         Visit Project <FaExternalLinkAlt size={12} />

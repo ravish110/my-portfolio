@@ -16,8 +16,8 @@ const Contact = () => {
                                     <FaEnvelope className="text-info" size={24} />
                                 </div>
                                 <div>
-                                    <h5 className="mb-0 text-white">Email</h5>
-                                    <a href="mailto:ravish.abbas94@gmail.com" className="text-white-50 text-decoration-none">ravish.abbas94@gmail.com</a>
+                                    <h5 className="mb-0">Email</h5>
+                                    <a href="mailto:ravish.abbas94@gmail.com" className="opacity-75 text-decoration-none" style={{ color: 'inherit' }}>ravish.abbas94@gmail.com</a>
                                 </div>
                             </div>
 
@@ -26,8 +26,8 @@ const Contact = () => {
                                     <FaPhone className="text-info" size={24} />
                                 </div>
                                 <div>
-                                    <h5 className="mb-0 text-white">Phone</h5>
-                                    <a href="tel:+919029666805" className="text-white-50 text-decoration-none">+91 9029666805</a>
+                                    <h5 className="mb-0">Phone</h5>
+                                    <a href="tel:+919029666805" className="opacity-75 text-decoration-none" style={{ color: 'inherit' }}>+91 9029666805</a>
                                 </div>
                             </div>
 
@@ -36,8 +36,8 @@ const Contact = () => {
                                     <FaMapMarkerAlt className="text-info" size={24} />
                                 </div>
                                 <div>
-                                    <h5 className="mb-0 text-white">Location</h5>
-                                    <p className="mb-0 text-white-50">Navi mumbai, Maharashtra, India</p>
+                                    <h5 className="mb-0">Location</h5>
+                                    <p className="mb-0 opacity-75">Navi mumbai, Maharashtra, India</p>
                                 </div>
                             </div>
 
@@ -46,21 +46,21 @@ const Contact = () => {
 
                     <Col md={7} className="animate__animated animate__fadeInRight">
                         <div className="glass-card">
-                            <h3 className="h4 fw-bold text-white mb-4">Send a Message</h3>
+                            <h3 className="h4 fw-bold mb-4">Send a Message</h3>
                             <Form action="https://formsubmit.co/ravish.neosoft@gmail.com" method="POST">
                                 <Row>
                                     <Col md={6} className="mb-3">
-                                        <Form.Control type="text" name="name" placeholder="Your Name" aria-label="Name" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
+                                        <Form.Control type="text" name="name" placeholder="Your Name" aria-label="Name" className="bg-transparent border-secondary" style={{ backdropFilter: 'blur(5px)', color: 'var(--text-primary)' }} required />
                                     </Col>
                                     <Col md={6} className="mb-3">
-                                        <Form.Control type="email" name="email" placeholder="Your Email" aria-label="Email" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
+                                        <Form.Control type="email" name="email" placeholder="Your Email" aria-label="Email" className="bg-transparent border-secondary" style={{ backdropFilter: 'blur(5px)', color: 'var(--text-primary)' }} required />
                                     </Col>
                                 </Row>
                                 <Form.Group className="mb-3">
-                                    <Form.Control type="text" name="subject" placeholder="Subject" aria-label="Subject" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
+                                    <Form.Control type="text" name="subject" placeholder="Subject" aria-label="Subject" className="bg-transparent border-secondary" style={{ backdropFilter: 'blur(5px)', color: 'var(--text-primary)' }} required />
                                 </Form.Group>
                                 <Form.Group className="mb-4">
-                                    <Form.Control as="textarea" name="message" rows={4} placeholder="Message" aria-label="Message" className="bg-transparent text-white border-secondary" style={{ backdropFilter: 'blur(5px)' }} required />
+                                    <Form.Control as="textarea" name="message" rows={4} placeholder="Message" aria-label="Message" className="bg-transparent border-secondary" style={{ backdropFilter: 'blur(5px)', color: 'var(--text-primary)' }} required />
                                 </Form.Group>
                                 <input type="hidden" name="_captcha" value="false" />
                                 <input type="hidden" name="_template" value="table" />

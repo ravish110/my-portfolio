@@ -37,7 +37,7 @@ const Skills = () => {
                                 style={{ animationDelay: `${index * 0.1}s` }}
                             >
                                 {category.icon}
-                                <h3 className="h5 fw-bold text-white mb-3">{category.title}</h3>
+                                <h3 className="h5 fw-bold mb-3">{category.title}</h3>
                                 <div className="d-flex flex-wrap justify-content-center gap-2">
                                     {category.skills.map(skill => (
                                         <Badge bg="info" className="text-dark bg-opacity-75" key={skill}>

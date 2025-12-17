@@ -8,8 +8,8 @@ const Hero = () => {
                     <Col md={6} className="text-center text-md-start animate__animated animate__fadeInLeft">
                         <h2 className="text-info text-uppercase mb-2" style={{ letterSpacing: '2px' }}>Hello, I'm</h2>
                         <h1 className="display-3 fw-bold mb-3">Ravish Abbas</h1>
-                        <h3 className="h2 text-light mb-4">Sr. Frontend Developer</h3>
-                        <p className="lead text-light opacity-75 mb-5" style={{ maxWidth: '500px' }}>
+                        <h3 className="h2 mb-4">Sr. Frontend Developer</h3>
+                        <p className="lead opacity-75 mb-5" style={{ maxWidth: '500px' }}>
                             Specializing in creating visually appealing, responsive, and high-performance websites with over 8+ years of experience.
                         </p>
                         <div className="d-flex gap-3 justify-content-center justify-content-md-start">
@@ -31,7 +31,7 @@ const Hero = () => {
                             />
                             <div className="mt-3">
                                 <h4 className="fw-bold">Ravish Abbas</h4>
-                                <p className="mb-0 text-muted small">Based in Navi Mumbai, India</p>
+                                <p className="mb-0 opacity-75 small">Based in Navi Mumbai, India</p>
                             </div>
                         </div>
                     </Col>
