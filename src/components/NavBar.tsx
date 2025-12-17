@@ -7,7 +7,7 @@ const NavBar = () => {
             <Container>
                 <Navbar.Brand href="#home" className="d-flex align-items-center animate__animated animate__fadeInLeft">
                     <FaCode size={24} className="me-2 text-info" />
-                    {/* <span className="fw-bold fs-4">Ravish Abbas</span> */}
+                    <span className="fw-bold fs-5">Ravish Abbas</span>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" className="border-0 shadow-none" />
                 <Navbar.Collapse id="basic-navbar-nav">
