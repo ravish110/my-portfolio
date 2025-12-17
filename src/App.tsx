@@ -1,6 +1,7 @@
 import { Container } from 'react-bootstrap';
 import NavBar from './components/NavBar';
 import Hero from './components/Hero';
+import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
@@ -13,6 +14,7 @@ function App() {
       <main>
         <Hero />
         <Container className="py-5">
+          <Skills />
           <Experience />
           <Projects />
           <Contact />

@@ -13,6 +13,7 @@ const NavBar = () => {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto animate__animated animate__fadeInRight">
                         <Nav.Link href="#home" className="mx-2">Home</Nav.Link>
+                        <Nav.Link href="#skills" className="mx-2">Skills</Nav.Link>
                         <Nav.Link href="#experience" className="mx-2">Experience</Nav.Link>
                         <Nav.Link href="#projects" className="mx-2">Projects</Nav.Link>
                         <Nav.Link href="#contact" className="mx-2">Contact</Nav.Link>
