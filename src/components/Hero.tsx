@@ -16,7 +16,7 @@ const Hero = () => {
                             <Button href="#contact" variant="info" size="lg" className="px-4 py-2 rounded-pill fw-bold text-white shadow-lg">
                                 Hire Me
                             </Button>
-                            <Button href="#projects" variant="outline-light" size="lg" className="px-4 py-2 rounded-pill fw-bold">
+                            <Button href="#experience" variant="outline-light" size="lg" className="px-4 py-2 rounded-pill fw-bold">
                                 My Work
                             </Button>
                         </div>

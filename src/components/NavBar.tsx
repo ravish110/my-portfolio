@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
-import { FaCode, FaSun, FaMoon } from 'react-icons/fa';
+import { FaCode, FaSun, FaMoon, FaDownload } from 'react-icons/fa';
+import resume from '../assets/resume.pdf';
 
 const NavBar = () => {
     const [theme, setTheme] = useState(() => {
@@ -31,6 +32,16 @@ const NavBar = () => {
                         <Nav.Link href="#skills" className="mx-2">Skills</Nav.Link>
                         <Nav.Link href="#experience" className="mx-2">Experience</Nav.Link>
                         <Nav.Link href="#contact" className="mx-2">Contact</Nav.Link>
+                        <Button
+                            as="a"
+                            href={resume}
+                            download="Ravish_Abbas_Resume.pdf"
+                            variant="outline-info"
+                            size="sm"
+                            className="mx-2 d-flex align-items-center gap-2"
+                        >
+                            <FaDownload size={14} /> Resume
+                        </Button>
                         <Button
                             variant="link"
                             onClick={toggleTheme}
