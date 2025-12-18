@@ -6,9 +6,9 @@ const Footer = () => {
         <footer className="py-4 glass-nav mt-auto">
             <Container className="text-center">
                 <div className="mb-3">
-                    <a href="#" className="text-white mx-3 hover-text-info" aria-label="GitHub"><FaGithub size={24} /></a>
-                    <a href="#" className="text-white mx-3 hover-text-info" aria-label="LinkedIn"><FaLinkedin size={24} /></a>
-                    <a href="#" className="text-white mx-3 hover-text-info" aria-label="Twitter"><FaTwitter size={24} /></a>
+                    <a href="https://github.com/ravish110" className="text-white mx-3 hover-text-info" aria-label="GitHub"><FaGithub size={24} /></a>
+                    <a href="https://in.linkedin.com/in/ravish-abbas-b15b4a101" className="text-white mx-3 hover-text-info" aria-label="LinkedIn"><FaLinkedin size={24} /></a>
+                    <a href="https://x.com/ravishabbas" className="text-white mx-3 hover-text-info" aria-label="Twitter"><FaTwitter size={24} /></a>
                 </div>
                 <p className="mb-0 text-white-50 small">
                     &copy; {new Date().getFullYear()} Ravish Abbas. All Rights Reserved.
