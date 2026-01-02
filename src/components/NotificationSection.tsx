@@ -126,7 +126,7 @@ const NotificationSection: React.FC = () => {
                     subscription,
                     title: 'Portfolio Reminder',
                     body: reminderText,
-                    delay: delay < 10000 ? delay : 0 // Vercel timeout limitation: only short delays work in serverless without a DB
+                    delay: delay
                 }),
                 headers: { 'Content-Type': 'application/json' }
             });
