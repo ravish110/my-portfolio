@@ -38,11 +38,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Real-world would use a database + cron or a proper queue.
 
         if (delay && delay > 0) {
-            // Vercel Hobby tier has a 10-60s limit. We cap wait time at 25s for reliability.
-            const waitTime = Math.min(delay, 25000);
-            console.log(`Scheduling notification (capped at 25s): ${waitTime}ms`);
-
-            await new Promise(resolve => setTimeout(resolve, waitTime));
+            console.log(`API received delay: ${delay}ms`);
+            if (delay > 35000) {
+                return res.status(400).json({ error: 'Delay too long for serverless. Use local timer.' });
+            }
+            console.log(`Server starting wait for ${delay}ms`);
+            await new Promise(resolve => setTimeout(resolve, delay));
         }
 
         await webpush.sendNotification(subscription, notificationPayload);

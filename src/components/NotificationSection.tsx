@@ -28,7 +28,7 @@ const NotificationSection: React.FC = () => {
     };
 
     useEffect(() => {
-        const checkStandalone = () => {
+        const checkStandalone = (extraInfo?: string) => {
             const isStandaloneMode = (window.navigator as any).standalone === true || window.matchMedia('(display-mode: standalone)').matches;
             setIsStandalone(isStandaloneMode);
 
@@ -36,15 +36,17 @@ const NotificationSection: React.FC = () => {
                 `Standalone: ${isStandaloneMode}`,
                 `Push Supported: ${'PushManager' in window}`,
                 `Permission: ${'Notification' in window ? Notification.permission : 'N/A'}`,
-                `SW: ${'serviceWorker' in navigator}`
-            ].join(' | ');
+                `SW: ${'serviceWorker' in navigator}`,
+                extraInfo ? ` | ${extraInfo}` : ''
+            ].join(' ');
             setDebugInfo(info);
         };
 
         checkStandalone();
         const mql = window.matchMedia('(display-mode: standalone)');
-        mql.addEventListener('change', checkStandalone);
-        return () => mql.removeEventListener('change', checkStandalone);
+        mql.addEventListener('change', () => checkStandalone());
+        (window as any).__updateDebug = checkStandalone;
+        return () => mql.removeEventListener('change', () => checkStandalone());
     }, []);
 
     const subscribeUser = async () => {
@@ -91,7 +93,6 @@ const NotificationSection: React.FC = () => {
         }
 
         const delay = scheduledDateTime.getTime() - now.getTime();
-        setStatus('Scheduling background notification...');
 
         const getOrdinalSuffix = (day: number) => {
             if (day > 3 && day < 21) return 'th';
@@ -111,11 +112,26 @@ const NotificationSection: React.FC = () => {
             return `${day}${getOrdinalSuffix(day)} ${month} ${year}, ${time}`;
         };
 
+        const extraDebug = `Delay: ${Math.round(delay / 1000)}s | At: ${scheduledTime}`;
+        (window as any).__updateDebug?.(extraDebug);
+        console.log(`Scheduling: ${extraDebug}`);
+
+        // HYBRID LOGIC: Short delays (< 25s) go to server for "True Background"
+        // Long delays go to local setTimeout because Serverless has a timeout.
+        if (delay > 25000) {
+            setStatus(`Scheduled locally for ${formatDateTime(scheduledDateTime)}. (Keep app open for long delays)`);
+            setTimeout(() => showNotification(reminderText), delay);
+            console.log('Long delay: Using local timer');
+            return;
+        }
+
+        setStatus('Scheduling background notification (True Background)...');
+
         const subscription = await subscribeUser();
         if (!subscription) {
             console.log('Push subscription failed, falling back to local timer');
             setTimeout(() => showNotification(reminderText), delay);
-            setStatus(`Scheduled locally for ${formatDateTime(scheduledDateTime)} (won't work if app closed)`);
+            setStatus(`Scheduled locally for ${formatDateTime(scheduledDateTime)} (Push failed)`);
             return;
         }
 
@@ -132,19 +148,14 @@ const NotificationSection: React.FC = () => {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                if (data.status === 'queued_attempt') {
-                    setStatus(`Caution: Background delivery (app closed) is only reliable for short delays in this demo.`);
-                } else {
-                    setStatus(`Scheduled successfully for ${formatDateTime(scheduledDateTime)}! You can close the app now.`);
-                }
+                setStatus(`Scheduled successfully! You can close the app now.`);
             } else {
-                throw new Error('Server error');
+                throw new Error('Server limit');
             }
         } catch (err) {
             console.error('Error scheduling push:', err);
             setTimeout(() => showNotification(reminderText), delay);
-            setStatus(`Scheduled locally (Server-side failed)`);
+            setStatus(`Scheduled locally (Server unavailable)`);
         }
     };
 
