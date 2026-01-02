@@ -7,7 +7,17 @@ const NotificationSection: React.FC = () => {
     const [reminderText, setReminderText] = useState<string>('');
     const [status, setStatus] = useState<string>('');
 
+    const [isStandalone, setIsStandalone] = useState<boolean>(false);
+
     useEffect(() => {
+        // Check if the app is running in standalone mode (installed as PWA)
+        const checkStandalone = () => {
+            const isStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
+            setIsStandalone(isStandaloneMode);
+        };
+
+        checkStandalone();
+
         if ('Notification' in window) {
             if (Notification.permission === 'default') {
                 Notification.requestPermission();
@@ -18,6 +28,11 @@ const NotificationSection: React.FC = () => {
     const scheduleNotification = () => {
         if (!scheduledDate || !scheduledTime || !reminderText.trim()) {
             alert('Please select date, time and enter reminder text');
+            return;
+        }
+
+        if (!isStandalone && /iPhone|iPad|iPod/.test(navigator.userAgent)) {
+            alert('On iPhone, notifications only work if you add this app to your Home Screen.');
             return;
         }
 
@@ -56,18 +71,34 @@ const NotificationSection: React.FC = () => {
         }, delay);
     };
 
-    const showNotification = (text: string) => {
-        if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('Portfolio Reminder', {
-                body: text,
-                icon: '/pwa-192x192.png'
-            });
-        } else if ('Notification' in window && Notification.permission !== 'denied') {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    showNotification(text);
-                }
-            });
+    const showNotification = async (text: string) => {
+        if (!('Notification' in window)) {
+            alert(`Reminder: ${text}`);
+            return;
+        }
+
+        if (Notification.permission === 'granted') {
+            // Use Service Worker for notification (required for iOS/Android background)
+            if ('serviceWorker' in navigator) {
+                const registration = await navigator.serviceWorker.ready;
+                registration.showNotification('Portfolio Reminder', {
+                    body: text,
+                    icon: '/pwa-192x192.png',
+                    badge: '/pwa-192x192.png',
+                    vibrate: [200, 100, 200]
+                } as any);
+            } else {
+                // Fallback for browsers without Service Worker support
+                new Notification('Portfolio Reminder', {
+                    body: text,
+                    icon: '/pwa-192x192.png'
+                });
+            }
+        } else if (Notification.permission !== 'denied') {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                showNotification(text);
+            }
         } else {
             alert(`Reminder: ${text}`);
         }
