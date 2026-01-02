@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Contact from './components/Contact';
+import NotificationSection from './components/NotificationSection';
 import Footer from './components/Footer';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Container className="py-5">
           <Skills />
           <Experience />
+          <NotificationSection />
           <Contact />
         </Container>
       </main>

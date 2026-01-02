@@ -31,6 +31,7 @@ const NavBar = () => {
                         <Nav.Link href="#home" className="mx-2">Home</Nav.Link>
                         <Nav.Link href="#skills" className="mx-2">Skills</Nav.Link>
                         <Nav.Link href="#experience" className="mx-2">Experience</Nav.Link>
+                        <Nav.Link href="#notifications" className="mx-2">Notifications</Nav.Link>
                         <Nav.Link href="#contact" className="mx-2">Contact</Nav.Link>
                         <Button
                             as="a"
