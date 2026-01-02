@@ -10,28 +10,58 @@ const NotificationSection: React.FC = () => {
     const [isStandalone, setIsStandalone] = useState<boolean>(false);
     const [debugInfo, setDebugInfo] = useState<string>('');
 
+    const VAPID_PUBLIC_KEY = 'BJZtTZmdQiRVGQVjKjFpdAZKUdCUJzzEoF3_YbnHqg4b18-b7I6usJds7OMQdXW_z8Y57FBfNNP-00-4v4aMMzk';
+
+    const urlBase64ToUint8Array = (base64String: string) => {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+            .replace(/-/g, '+')
+            .replace(/_/g, '/');
+
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    };
+
     useEffect(() => {
-        // Check if the app is running in standalone mode (installed as PWA)
         const checkStandalone = () => {
             const isStandaloneMode = (window.navigator as any).standalone === true || window.matchMedia('(display-mode: standalone)').matches;
             setIsStandalone(isStandaloneMode);
 
             const info = [
                 `Standalone: ${isStandaloneMode}`,
-                `Notification Support: ${'Notification' in window}`,
+                `Push Supported: ${'PushManager' in window}`,
                 `Permission: ${'Notification' in window ? Notification.permission : 'N/A'}`,
-                `ServiceWorker: ${'serviceWorker' in navigator}`
+                `SW: ${'serviceWorker' in navigator}`
             ].join(' | ');
             setDebugInfo(info);
         };
 
         checkStandalone();
-
-        // Listen for changes in standalone mode (though rare mid-session)
         const mql = window.matchMedia('(display-mode: standalone)');
         mql.addEventListener('change', checkStandalone);
         return () => mql.removeEventListener('change', checkStandalone);
     }, []);
+
+    const subscribeUser = async () => {
+        if (!('serviceWorker' in navigator)) return null;
+
+        try {
+            const registration = await navigator.serviceWorker.ready;
+            const subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+            });
+            return subscription;
+        } catch (err) {
+            console.error('Failed to subscribe user:', err);
+            return null;
+        }
+    };
 
     const scheduleNotification = async () => {
         if (!scheduledDate || !scheduledTime || !reminderText.trim()) {
@@ -39,23 +69,17 @@ const NotificationSection: React.FC = () => {
             return;
         }
 
-        // On iOS, we MUST request permission during a user gesture (like this click)
         if ('Notification' in window && Notification.permission !== 'granted') {
-            try {
-                const permission = await Notification.requestPermission();
-                if (permission !== 'granted') {
-                    alert('Notification permission is required for reminders to work.');
-                    return;
-                }
-            } catch (err) {
-                console.error('Error requesting permission:', err);
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') {
+                alert('Notification permission required for reminders.');
+                return;
             }
         }
 
         const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
         if (isIOS && !isStandalone) {
-            alert('Notice: On iPhone, system notifications only appear when using the app from your HOME SCREEN.');
-            // We continue, but it might only show as an alert later
+            alert('Notice: On iPhone, notifications ONLY work if you have Added to Home Screen.');
         }
 
         const scheduledDateTime = new Date(`${scheduledDate}T${scheduledTime}`);
@@ -67,6 +91,7 @@ const NotificationSection: React.FC = () => {
         }
 
         const delay = scheduledDateTime.getTime() - now.getTime();
+        setStatus('Scheduling background notification...');
 
         const getOrdinalSuffix = (day: number) => {
             if (day > 3 && day < 21) return 'th';
@@ -86,77 +111,58 @@ const NotificationSection: React.FC = () => {
             return `${day}${getOrdinalSuffix(day)} ${month} ${year}, ${time}`;
         };
 
-        setStatus(`Notification scheduled for ${formatDateTime(scheduledDateTime)}`);
-
-        // Diagnostic alert to verify timing
-        console.log(`Scheduling notification in ${delay}ms`);
-        if (isIOS) {
-            alert(`Debug: Waiting ${Math.round(delay / 1000)} seconds... Keep app open or recently backgrounded.`);
+        const subscription = await subscribeUser();
+        if (!subscription) {
+            console.log('Push subscription failed, falling back to local timer');
+            setTimeout(() => showNotification(reminderText), delay);
+            setStatus(`Scheduled locally for ${formatDateTime(scheduledDateTime)} (won't work if app closed)`);
+            return;
         }
 
-        setTimeout(() => {
-            console.log('Timeout fired, calling showNotification');
-            showNotification(reminderText);
-        }, delay);
+        try {
+            const response = await fetch('/api/push', {
+                method: 'POST',
+                body: JSON.stringify({
+                    subscription,
+                    title: 'Portfolio Reminder',
+                    body: reminderText,
+                    delay: delay < 10000 ? delay : 0 // Vercel timeout limitation: only short delays work in serverless without a DB
+                }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.status === 'queued_attempt') {
+                    setStatus(`Caution: Background delivery (app closed) is only reliable for short delays in this demo.`);
+                } else {
+                    setStatus(`Scheduled successfully for ${formatDateTime(scheduledDateTime)}! You can close the app now.`);
+                }
+            } else {
+                throw new Error('Server error');
+            }
+        } catch (err) {
+            console.error('Error scheduling push:', err);
+            setTimeout(() => showNotification(reminderText), delay);
+            setStatus(`Scheduled locally (Server-side failed)`);
+        }
     };
 
     const showNotification = async (text: string) => {
-        console.log('Attempting to show notification:', text);
-
         if (!('Notification' in window)) {
             alert(`Reminder: ${text}`);
             return;
         }
 
         if (Notification.permission === 'granted') {
-            let notificationShown = false;
-
-            // Try Service Worker first (best for background/tray)
             if ('serviceWorker' in navigator) {
-                try {
-                    // Timeout the service worker ready check
-                    const registration = await Promise.any([
-                        navigator.serviceWorker.ready,
-                        new Promise((_, reject) => setTimeout(() => reject('SW timeout'), 2000))
-                    ]) as ServiceWorkerRegistration;
-
-                    await registration.showNotification('Portfolio Reminder', {
-                        body: text,
-                        icon: '/pwa-192x192.png',
-                        badge: '/pwa-192x192.png',
-                        vibrate: [200, 100, 200]
-                    } as any);
-                    notificationShown = true;
-                    console.log('Notification shown via SW');
-                } catch (err) {
-                    console.error('Service worker notification failed:', err);
-                }
-            }
-
-            // Fallback to legacy Notification if SW failed or not available
-            if (!notificationShown) {
-                try {
-                    new Notification('Portfolio Reminder', {
-                        body: text,
-                        icon: '/pwa-192x192.png'
-                    });
-                    notificationShown = true;
-                    console.log('Notification shown via legacy API');
-                } catch (err) {
-                    console.error('Legacy notification failed:', err);
-                }
-            }
-
-            // Absolute fallback: Alert
-            if (!notificationShown) {
-                alert(`Reminder: ${text}`);
-            }
-        } else if (Notification.permission !== 'denied') {
-            const permission = await Notification.requestPermission();
-            if (permission === 'granted') {
-                showNotification(text);
+                const registration = await navigator.serviceWorker.ready;
+                registration.showNotification('Portfolio Reminder', {
+                    body: text,
+                    icon: '/pwa-192x192.png'
+                } as any);
             } else {
-                alert(`Reminder: ${text}`);
+                new Notification('Portfolio Reminder', { body: text });
             }
         } else {
             alert(`Reminder: ${text}`);
