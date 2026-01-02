@@ -18,7 +18,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { subscription, title, body, delay } = req.body;
+    const { subscription, title, body } = req.body;
 
     if (!subscription || !title || !body) {
         return res.status(400).json({ error: 'Missing required fields' });
@@ -32,20 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     try {
-        // If a delay is provided, we use a simple setTimeout in the serverless function
-        // Note: Vercel functions have a timeout (usually 10-60s), so long delays (minutes) 
-        // won't work this way. But for short demos it's fine.
-        // Real-world would use a database + cron or a proper queue.
-
-        if (delay && delay > 0) {
-            console.log(`API received delay: ${delay}ms`);
-            if (delay > 35000) {
-                return res.status(400).json({ error: 'Delay too long for serverless. Use local timer.' });
-            }
-            console.log(`Server starting wait for ${delay}ms`);
-            await new Promise(resolve => setTimeout(resolve, delay));
-        }
-
+        console.log(`Push payload received from scheduler. Sending to push service...`);
         await webpush.sendNotification(subscription, notificationPayload);
         res.status(200).json({ success: true });
     } catch (error) {

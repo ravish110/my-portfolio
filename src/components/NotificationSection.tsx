@@ -114,29 +114,19 @@ const NotificationSection: React.FC = () => {
 
         const extraDebug = `Delay: ${Math.round(delay / 1000)}s | At: ${scheduledTime}`;
         (window as any).__updateDebug?.(extraDebug);
-        console.log(`Scheduling: ${extraDebug}`);
+        console.log(`Scheduling via QStash: ${extraDebug}`);
 
-        // HYBRID LOGIC: Short delays (< 25s) go to server for "True Background"
-        // Long delays go to local setTimeout because Serverless has a timeout.
-        if (delay > 25000) {
-            setStatus(`Scheduled locally for ${formatDateTime(scheduledDateTime)}. (Keep app open for long delays)`);
-            setTimeout(() => showNotification(reminderText), delay);
-            console.log('Long delay: Using local timer');
-            return;
-        }
-
-        setStatus('Scheduling background notification (True Background)...');
+        setStatus('Connecting to professional background service...');
 
         const subscription = await subscribeUser();
         if (!subscription) {
-            console.log('Push subscription failed, falling back to local timer');
-            setTimeout(() => showNotification(reminderText), delay);
-            setStatus(`Scheduled locally for ${formatDateTime(scheduledDateTime)} (Push failed)`);
+            alert('Push subscription failed. Please ensure you have allowed notifications.');
+            setStatus(`Registration failed.`);
             return;
         }
 
         try {
-            const response = await fetch('/api/push', {
+            const response = await fetch('/api/schedule', {
                 method: 'POST',
                 body: JSON.stringify({
                     subscription,
@@ -148,35 +138,14 @@ const NotificationSection: React.FC = () => {
             });
 
             if (response.ok) {
-                setStatus(`Scheduled successfully! You can close the app now.`);
+                setStatus(`Scheduled exactly for ${formatDateTime(scheduledDateTime)}! You can close the app now.`);
             } else {
-                throw new Error('Server limit');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Server error');
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Error scheduling push:', err);
-            setTimeout(() => showNotification(reminderText), delay);
-            setStatus(`Scheduled locally (Server unavailable)`);
-        }
-    };
-
-    const showNotification = async (text: string) => {
-        if (!('Notification' in window)) {
-            alert(`Reminder: ${text}`);
-            return;
-        }
-
-        if (Notification.permission === 'granted') {
-            if ('serviceWorker' in navigator) {
-                const registration = await navigator.serviceWorker.ready;
-                registration.showNotification('Portfolio Reminder', {
-                    body: text,
-                    icon: '/pwa-192x192.png'
-                } as any);
-            } else {
-                new Notification('Portfolio Reminder', { body: text });
-            }
-        } else {
-            alert(`Reminder: ${text}`);
+            setStatus(`Failed to schedule: ${err.message}`);
         }
     };
 

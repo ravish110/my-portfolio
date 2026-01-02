@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
+    "@upstash/qstash": "^2.8.4",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.3.8",
     "react": "^19.2.0",
