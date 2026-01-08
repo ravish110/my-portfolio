@@ -109,3 +109,7 @@ a {
 ::-ms-input-placeholder {
   color: var(--text-secondary) !important;
 }
+
+.text-muted-theme {
+  color: var(--text-secondary) !important;
+}
