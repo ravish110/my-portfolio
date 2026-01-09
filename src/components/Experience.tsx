@@ -12,30 +12,35 @@ const experiences = [
             {
                 name: "Infosys Aster Global CMO AI Hub",
                 period: "Oct 2023 - Present",
-                desc: "Developed frontend architecture using React.js and integrated AI-ML chatbots."
+                desc: "Developed frontend architecture using React.js and integrated AI-ML chatbots.",
+                skills: ["React.js", "AI-ML Integration", "Architecture"]
             },
             {
                 name: "Thomas Cook Pvt Ltd",
                 period: "May 2023 - Sep 2023",
-                desc: "Led development of a hotel booking portal and custom pricing calendars using React.js and Redux Toolkit."
+                desc: "Led development of a hotel booking portal and custom pricing calendars using React.js and Redux Toolkit.",
+                skills: ["React.js", "Redux Toolkit", "Lead"]
             },
             {
                 name: "Turtlemintmoney",
                 period: "Jan 2021 - Aug 2023",
                 desc: "Built mutual fund investment platforms using React, TypeScript, and D3.js.",
-                projectLink: "https://www.turtlemintmoney.com"
+                projectLink: "https://www.turtlemintmoney.com",
+                skills: ["React.js", "Redux", "D3.js", "TypeScript"]
             },
             {
                 name: "Turtlemint",
                 period: "Jan 2019 - Dec 2020",
                 desc: "Developed insurance products using AngularJS, Angular 14, and Material Design.",
-                projectLink: "https://www.turtlemint.com"
+                projectLink: "https://www.turtlemint.com",
+                skills: ["AngularJS", "Angular 14", "Material Design"]
             },
             {
                 name: "Mintpro",
                 period: "Jan 2018 - Dec 2018",
                 desc: "Developed web pages for agent/partner platform selling insurance and mutual funds.",
-                projectLink: "https://www.turtlemintpro.com"
+                projectLink: "https://www.turtlemintpro.com",
+                skills: ["AngularJS", "Bootstrap", "Responsive"]
             }
         ]
     },
@@ -117,9 +122,9 @@ const Experience = () => {
                                         </div>
                                         <h4 className="h6 text-secondary mb-3">Frontend Developer {proj.name.includes("Lead") ? "(Lead)" : ""}</h4>
                                         <p className="mb-2 opacity-75">{proj.desc}</p>
-                                        {exp.skills && pIdx === 0 && (
+                                        {(proj.skills || exp.skills) && (
                                             <div className="mb-0">
-                                                {exp.skills.map(skill => (
+                                                {(proj.skills || exp.skills).map(skill => (
                                                     <Badge bg="secondary" className="me-1 mb-1" key={skill}>{skill}</Badge>
                                                 ))}
                                             </div>
