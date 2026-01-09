@@ -3,24 +3,24 @@ import { FaCode, FaTools, FaLaptopCode, FaRocket } from 'react-icons/fa';
 
 const skillCategories = [
     {
-        title: "Frontend Core",
-        icon: <FaCode className="text-info mb-3" size={30} />,
-        skills: ["HTML5", "CSS3", "JavaScript", "TypeScript", "Responsive Web Design"]
-    },
-    {
         title: "Frameworks & Libraries",
         icon: <FaLaptopCode className="text-info mb-3" size={30} />,
-        skills: ["React", "Angular", "jQuery", "Bootstrap", "Tailwind CSS", "Ant Design"]
+        skills: ["React.js", "Redux Toolkit", "Redux", "AngularJS", "Angular 14", "jQuery", "TypeScript", "JavaScript (ES6+)"]
     },
     {
-        title: "State Management",
+        title: "Styling & UI",
+        icon: <FaCode className="text-info mb-3" size={30} />,
+        skills: ["HTML5", "CSS3", "SCSS", "LESS", "Bootstrap", "Material Design", "Ant Design", "PrimeNG", "Responsive Web Design"]
+    },
+    {
+        title: "Data Visualization",
         icon: <FaRocket className="text-info mb-3" size={30} />,
-        skills: ["Redux", "Redux Toolkit (RTK)"]
+        skills: ["Chart.js", "D3.js"]
     },
     {
-        title: "Tools & Integration",
+        title: "Tools & Others",
         icon: <FaTools className="text-info mb-3" size={30} />,
-        skills: ["Git", "Firebase", "Google Analytics (GA)", "Google Tag Manager", "Deployment", "SEO", "GenAI"]
+        skills: ["Git", "RESTful API", "Google Analytics", "SEO Optimization", "Figma", "GenAI"]
     }
 ];
 
